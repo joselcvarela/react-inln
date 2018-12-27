@@ -1,9 +1,11 @@
 {
   "name": "react-inln",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Define react component style for multiple breakpoints directly in props",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "keywords": [
+    "react", "react-inln", "inline", "styles", "css", "css-in-js", "props", "responsive", "media"
+  ],
   "repository": "git@github.com:joselcvarela/react-inln.git",
   "author": "Jose Varela <joselcvarela@gmail.com>",
   "license": "MIT",
