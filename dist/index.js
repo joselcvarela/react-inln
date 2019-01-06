@@ -86,6 +86,8 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_breakpoints", []);
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "blacklistAttributes", ['length', 'src']);
+
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "extractFromProps", function (props) {
       var _props$tag = props.tag,
           Tag = _props$tag === void 0 ? 'div' : _props$tag,
@@ -104,7 +106,7 @@ function (_Component) {
             _prop$split2$ = _prop$split2[1],
             breakpoint = _prop$split2$ === void 0 ? '' : _prop$split2$;
 
-        if (key in document.body.style) {
+        if (!_this.blacklistAttributes.includes(key) && key in document.body.style) {
           cssRules[breakpoint] = _objectSpread({}, cssRules[breakpoint], _defineProperty({}, key, value));
         } else {
           otherProps = _objectSpread({}, otherProps, _defineProperty({}, key, value));
