@@ -34,11 +34,11 @@ export default () => (
 ## Breakpoints
 The default breakpoints are:
 ```js
-    { match: '(min-width: 1px) and (max-width: 575px)', alias: 'xs' },
-    { match: '(min-width: 576px) and (max-width: 768px)', alias: 's' },
-    { match: '(min-width: 769px) and (max-width: 991px)', alias: 'm' },
-    { match: '(min-width: 992px) and (max-width: 1199px)', alias: 'l' },
-    { match: '(min-width: 1200px) and (max-width: 9999px)', alias: 'xl' },
+    { match: 'only screen and (max-width: 575px)', alias: 'xs' },
+    { match: 'only screen and (max-width: 768px)', alias: 's' },
+    { match: 'only screen and (max-width: 992px)', alias: 'm' },
+    { match: 'only screen and (max-width: 1200px)', alias: 'l' },
+    { match: 'only screen and (min-width: 1201px)', alias: 'xl' },
 
 ```
 but they are easy to modify. To do so, consider the following example:
@@ -47,11 +47,11 @@ but they are easy to modify. To do so, consider the following example:
 import RootElement from 'react-inln'
 export default class Element extends RootElement {
   breakpoints: [
-        { match: '(min-width: 1px) and (max-width: 320px)', alias: 'verySmall' },
-    { match: '(min-width: 321px) and (max-width: 768px)', alias: 'small' },
-    { match: '(min-width: 769px) and (max-width: 991px)', alias: 'medium' },
-    { match: '(min-width: 992px) and (max-width: 1199px)', alias: 'large' },
-    { match: '(min-width: 1200px) and (max-width: 9999px)', alias: 'extraLarge' },
+    { match: 'only screen and (min-width: 1200px)', alias: 'extraLarge' },
+    { match: 'only screen and (min-width: 992px)', alias: 'large' },
+    { match: 'only screen and (min-width: 769px)', alias: 'medium' },
+    { match: 'only screen and (min-width: 321px)', alias: 'small' },
+    { match: 'only screen and (min-width: 1px)', alias: 'verySmall' },
   ]
 }
 
