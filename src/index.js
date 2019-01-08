@@ -12,6 +12,10 @@ class Element extends Component {
   _breakpoints = []
   cssAttributes = Object.keys(document.body.style).filter(a => !['length', 'src'].includes(a))
 
+  equalCss = (prev, next) => {
+    return JSON.stringify(prev, this.cssAttributes) !== JSON.stringify(next, this.cssAttributes)
+  }
+
   componentDidMount() {
     this._breakpoints = this.breakpoints.map(({ match, alias }) => (
       { mql: window.matchMedia(match), listener: (mql) => this.matchedMedia(alias, mql) }
@@ -25,11 +29,8 @@ class Element extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { cssRules: prevCssRules } = this.extractFromProps(prevProps)
-    const { cssRules } = this.extractFromProps(this.props)
-    if (Object.keys(cssRules).length !== Object.keys(prevCssRules).length ||
-      JSON.stringify(prevCssRules) !== JSON.stringify(cssRules)) {
-        this._breakpoints.forEach(({ mql, listener }) => listener(mql))
+    if (!this.equalCss(prevProps, this.props)) {
+      this._breakpoints.forEach(({ mql, listener }) => listener(mql))
     }
   }
 
