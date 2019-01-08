@@ -10,7 +10,7 @@ class Element extends Component {
     { match: '(min-width: 1200px) and (max-width: 9999px)', alias: 'xl' },
   ]
   _breakpoints = []
-  blacklistAttributes = [ 'length', 'src' ]
+  cssAttributes = Object.keys(document.body.style).filter(a => !['length', 'src'].includes(a))
 
   componentDidMount() {
     this._breakpoints = this.breakpoints.map(({ match, alias }) => (
@@ -40,7 +40,7 @@ class Element extends Component {
     for (let prop in rest) {
       const value = rest[prop]
       let [ key, breakpoint = '' ] = prop.split('_')
-      if (!this.blacklistAttributes.includes(key) && key in document.body.style) {
+      if (this.cssAttributes.includes(key)) {
         cssRules[breakpoint] = { ...cssRules[breakpoint], [key]: value }
       } else {
         otherProps = { ...otherProps, [key]: value }
