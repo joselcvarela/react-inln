@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 class Element extends Component {
   state = { css: {} }
   breakpoints = [
-    { match: '(min-width: 1px) and (max-width: 575px)', alias: 'xs' },
-    { match: '(min-width: 576px) and (max-width: 768px)', alias: 's' },
-    { match: '(min-width: 769px) and (max-width: 991px)', alias: 'm' },
-    { match: '(min-width: 992px) and (max-width: 1199px)', alias: 'l' },
-    { match: '(min-width: 1200px) and (max-width: 9999px)', alias: 'xl' },
+    { match: 'only screen and (max-width: 575px)', alias: 'xs' },
+    { match: 'only screen and (max-width: 768px)', alias: 's' },
+    { match: 'only screen and (max-width: 992px)', alias: 'm' },
+    { match: 'only screen and (max-width: 1200px)', alias: 'l' },
+    { match: 'only screen and (min-width: 1201px)', alias: 'xl' },
   ]
   _breakpoints = []
   cssAttributes = Object.keys(document.body.style).filter(a => !['length', 'src'].includes(a))
@@ -18,7 +18,7 @@ class Element extends Component {
 
   componentDidMount() {
     this._breakpoints = this.breakpoints.map(({ match, alias }) => (
-      { mql: window.matchMedia(match), listener: (mql) => this.matchedMedia(alias, mql) }
+      { alias, mql: window.matchMedia(match), listener: (mql) => this.matchedMedia(alias, mql) }
     ))
     this._breakpoints.forEach(({ mql, listener }) => mql.addListener(listener))
     this._breakpoints.forEach(({ mql, listener }) => listener(mql))
@@ -51,11 +51,21 @@ class Element extends Component {
   }
 
   matchedMedia = (breakpoint, mql) => {
-    if (mql.matches) {
-      const { cssRules } = this.extractFromProps(this.props)
-      let css = { ...cssRules[''], ...cssRules[breakpoint] }
+    const { cssRules } = this.extractFromProps(this.props)
+    let css = cssRules[''] || {}
+    if (breakpoint in cssRules && mql.matches) {
+      css = { ...css, ...cssRules[breakpoint] }
+    } else {
+      const brk = this._breakpoints.find(b => {
+        return b.alias in cssRules && b.mql.matches
+      })
+      if (brk) {
+        css = { ...css, ...cssRules[brk.alias] }
+      }
+    }
 
-      if (css && Object.keys(css).length) {
+    if (css && Object.keys(css).length) {
+      if (!this.equalCss(this.state.css, css)) {
         this.setState({ css })
       }
     }
