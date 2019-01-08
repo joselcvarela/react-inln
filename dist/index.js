@@ -64,29 +64,36 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Element)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      css: {}
+      css: {},
+      changed: false
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "breakpoints", [{
-      match: '(min-width: 1px) and (max-width: 575px)',
+      match: 'only screen and (max-width: 575px)',
       alias: 'xs'
     }, {
-      match: '(min-width: 576px) and (max-width: 768px)',
+      match: 'only screen and (max-width: 768px)',
       alias: 's'
     }, {
-      match: '(min-width: 769px) and (max-width: 991px)',
+      match: 'only screen and (max-width: 992px)',
       alias: 'm'
     }, {
-      match: '(min-width: 992px) and (max-width: 1199px)',
+      match: 'only screen and (max-width: 1200px)',
       alias: 'l'
     }, {
-      match: '(min-width: 1200px) and (max-width: 9999px)',
+      match: 'only screen and (min-width: 1201px)',
       alias: 'xl'
     }]);
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_breakpoints", []);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "blacklistAttributes", ['length', 'src']);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "cssAttributes", Object.keys(document.body.style).filter(function (a) {
+      return !['length', 'src'].includes(a);
+    }));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "equalProps", function (prev, next) {
+      return JSON.stringify(prev, _this.cssAttributes) !== JSON.stringify(next, _this.cssAttributes);
+    });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "extractFromProps", function (props) {
       var _props$tag = props.tag,
@@ -106,7 +113,7 @@ function (_Component) {
             _prop$split2$ = _prop$split2[1],
             breakpoint = _prop$split2$ === void 0 ? '' : _prop$split2$;
 
-        if (!_this.blacklistAttributes.includes(key) && key in document.body.style) {
+        if (_this.cssAttributes.includes(key)) {
           cssRules[breakpoint] = _objectSpread({}, cssRules[breakpoint], _defineProperty({}, key, value));
         } else {
           otherProps = _objectSpread({}, otherProps, _defineProperty({}, key, value));
@@ -122,17 +129,27 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "matchedMedia", function (breakpoint, mql) {
-      if (mql.matches) {
-        var _this$extractFromProp = _this.extractFromProps(_this.props),
-            cssRules = _this$extractFromProp.cssRules;
+      var _this$extractFromProp = _this.extractFromProps(_this.props),
+          cssRules = _this$extractFromProp.cssRules;
 
-        var css = _objectSpread({}, cssRules[''], cssRules[breakpoint]);
+      var css = cssRules[''] || {};
 
-        if (css && Object.keys(css).length) {
-          _this.setState({
-            css: css
-          });
+      if (breakpoint in cssRules && mql.matches) {
+        css = _objectSpread({}, css, cssRules[breakpoint]);
+      } else {
+        var brk = _this._breakpoints.find(function (b) {
+          return b.alias in cssRules && b.mql.matches;
+        });
+
+        if (brk) {
+          css = _objectSpread({}, css, cssRules[brk.alias]);
         }
+      }
+
+      if (css && Object.keys(css).length) {
+        if (JSON.stringify(css) !== JSON.stringify(_this.state.css)) _this.setState({
+          css: css
+        });
       }
     });
 
@@ -148,6 +165,7 @@ function (_Component) {
         var match = _ref.match,
             alias = _ref.alias;
         return {
+          alias: alias,
           mql: window.matchMedia(match),
           listener: function listener(mql) {
             return _this2.matchedMedia(alias, mql);
@@ -179,13 +197,7 @@ function (_Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
-      var _this$extractFromProp2 = this.extractFromProps(prevProps),
-          prevCssRules = _this$extractFromProp2.cssRules;
-
-      var _this$extractFromProp3 = this.extractFromProps(this.props),
-          cssRules = _this$extractFromProp3.cssRules;
-
-      if (Object.keys(cssRules).length !== Object.keys(prevCssRules).length || JSON.stringify(prevCssRules) !== JSON.stringify(cssRules)) {
+      if (!this.equalProps(prevProps, this.props)) {
         this._breakpoints.forEach(function (_ref5) {
           var mql = _ref5.mql,
               listener = _ref5.listener;
@@ -196,10 +208,10 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$extractFromProp4 = this.extractFromProps(this.props),
-          Tag = _this$extractFromProp4.Tag,
-          children = _this$extractFromProp4.children,
-          props = _this$extractFromProp4.props;
+      var _this$extractFromProp2 = this.extractFromProps(this.props),
+          Tag = _this$extractFromProp2.Tag,
+          children = _this$extractFromProp2.children,
+          props = _this$extractFromProp2.props;
 
       return _react.default.createElement(Tag, _extends({}, props, {
         style: this.state.css
