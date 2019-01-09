@@ -13,7 +13,7 @@ class Element extends Component {
   cssAttributes = Object.keys(document.body.style).filter(a => !['length', 'src'].includes(a))
 
   equalCss = (prev, next) => {
-    return JSON.stringify(prev, this.cssAttributes) !== JSON.stringify(next, this.cssAttributes)
+    return JSON.stringify(prev, this.cssAttributes) === JSON.stringify(next, this.cssAttributes)
   }
 
   componentDidMount() {

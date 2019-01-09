@@ -64,8 +64,7 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Element)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      css: {},
-      changed: false
+      css: {}
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "breakpoints", [{
@@ -91,8 +90,8 @@ function (_Component) {
       return !['length', 'src'].includes(a);
     }));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "equalProps", function (prev, next) {
-      return JSON.stringify(prev, _this.cssAttributes) !== JSON.stringify(next, _this.cssAttributes);
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "equalCss", function (prev, next) {
+      return JSON.stringify(prev, _this.cssAttributes) === JSON.stringify(next, _this.cssAttributes);
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "extractFromProps", function (props) {
@@ -147,9 +146,11 @@ function (_Component) {
       }
 
       if (css && Object.keys(css).length) {
-        if (JSON.stringify(css) !== JSON.stringify(_this.state.css)) _this.setState({
-          css: css
-        });
+        if (!_this.equalCss(_this.state.css, css)) {
+          _this.setState({
+            css: css
+          });
+        }
       }
     });
 
@@ -197,7 +198,7 @@ function (_Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
-      if (!this.equalProps(prevProps, this.props)) {
+      if (!this.equalCss(prevProps, this.props)) {
         this._breakpoints.forEach(function (_ref5) {
           var mql = _ref5.mql,
               listener = _ref5.listener;
