@@ -86,9 +86,22 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "_breakpoints", []);
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "cssAttributes", Object.keys(document.body.style).filter(function (a) {
-      return !['length', 'src'].includes(a);
-    }));
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "ignoreAttributes", ['length', 'src']);
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "cssAttributes", function () {
+      // this, could be simple Object.keys....filter but firefox and ie doesn't support
+      var attrs = [];
+
+      for (var attr in document.body.style) {
+        if (['length', 'src'].indexOf(attr) !== -1) break;
+
+        if (document.body.style[attr].constructor && [String, Number].indexOf(document.body.style[attr].constructor) > -1) {
+          attrs.push(attr);
+        }
+      }
+
+      return attrs;
+    }());
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "equalCss", function (prev, next) {
       return JSON.stringify(prev, _this.cssAttributes) === JSON.stringify(next, _this.cssAttributes);
