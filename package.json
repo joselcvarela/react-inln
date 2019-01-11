@@ -1,6 +1,6 @@
 {
   "name": "react-inln",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Define react component style for multiple breakpoints directly in props",
   "main": "dist/index.js",
   "keywords": [

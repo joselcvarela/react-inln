@@ -10,7 +10,17 @@ class Element extends Component {
     { match: 'only screen and (min-width: 1201px)', alias: 'xl' },
   ]
   _breakpoints = []
-  cssAttributes = Object.keys(document.body.style).filter(a => !['length', 'src'].includes(a))
+  ignoreAttributes =  ['length', 'src']
+  cssAttributes = (() => { // this, could be simple Object.keys....filter but firefox and ie doesn't support
+    const attrs = []
+    for (const attr in document.body.style) {
+      if (['length', 'src'].indexOf(attr) !== -1) break;
+      if (document.body.style[attr].constructor && [String, Number].indexOf(document.body.style[attr].constructor) > -1) {
+        attrs.push(attr)
+      }
+    }
+    return attrs
+  })()
 
   equalCss = (prev, next) => {
     return JSON.stringify(prev, this.cssAttributes) === JSON.stringify(next, this.cssAttributes)
