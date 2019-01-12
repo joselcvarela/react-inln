@@ -1,10 +1,18 @@
 {
   "name": "react-inln",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Define react component style for multiple breakpoints directly in props",
   "main": "dist/index.js",
   "keywords": [
-    "react", "react-inln", "inline", "styles", "css", "css-in-js", "props", "responsive", "media"
+    "react",
+    "react-inln",
+    "inline",
+    "styles",
+    "css",
+    "css-in-js",
+    "props",
+    "responsive",
+    "media"
   ],
   "repository": "git@github.com:joselcvarela/react-inln.git",
   "author": "Jose Varela <joselcvarela@gmail.com>",
@@ -13,13 +21,14 @@
     "react": "^16.7.0"
   },
   "scripts": {
-    "build": "babel src/index.js -o dist/index.js"
+    "build": "babel src/index.js -o dist/index.js --presets minify --no-comments"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/preset-react": "^7.0.0",
+    "babel-preset-minify": "^0.5.0"
   }
 }
