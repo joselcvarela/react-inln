@@ -14,8 +14,8 @@ class Element extends Component {
   cssAttributes = (() => { // this, could be simple Object.keys....filter but firefox and ie doesn't support
     const attrs = []
     for (const attr in document.body.style) {
-      if (['length', 'src'].indexOf(attr) !== -1) break;
-      if (document.body.style[attr].constructor && [String, Number].indexOf(document.body.style[attr].constructor) > -1) {
+      if (['length', 'src'].includes(attr)) continue
+      if (['string', 'number'].includes(typeof document.body.style[attr])) {
         attrs.push(attr)
       }
     }
